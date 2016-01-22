@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please select an option below:\n"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:id="@+id/WelcomeText"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Read Card"
+        android:id="@+id/ReadButton"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Setup Card"
+        android:id="@+id/SetupButton"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="View Library"
+        android:id="@+id/LibraryButton"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Duel"
+        android:id="@+id/DuelButton"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:id="@+id/ExitButton"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>
