@@ -2,6 +2,7 @@ package com.example.ckinn.honoursproject;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
@@ -11,7 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import android.app.Activity;
@@ -21,6 +26,7 @@ import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
+import  android.nfc.tech.NdefFormatable;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.Ndef;
@@ -30,6 +36,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.net.URLEncoder;
+import java.util.Locale;
+
 /**
  * Created by ckinn on 22/01/2016.
  */
@@ -45,6 +53,9 @@ public class HomeScreenActivity extends AppCompatActivity{
     Button DuelButton;
     Button ExitButton;
     NfcAdapter theNFCAdapter;
+    public static boolean readingCard = false;
+    private boolean writingCard = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +70,33 @@ public class HomeScreenActivity extends AppCompatActivity{
         ReadCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(readingCard==false)
+                {
+                    readingCard = true;
+                    writingCard = false;
+                    WelcomeText.setText("Card Reading Activated. Hold device over card to scan");
+                }
+               else if(readingCard==true)
+                {
+                    readingCard = false;
+                    WelcomeText.setText("Card Reading Deactivated.");
+                }
             }
         });
         SetupCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(writingCard==false)
+                {
+                    writingCard = true;
+                    readingCard = false;
+                    WelcomeText.setText("Card Writing Activated. Hold device over card to write");
+                }
+                else if(writingCard==true)
+                {
+                    writingCard = false;
+                    WelcomeText.setText("Card Writing Deactivated.");
+                }
 
             }
         });
@@ -101,37 +133,58 @@ public class HomeScreenActivity extends AppCompatActivity{
             WelcomeText.setText("NFC is enabled");
         }
 
-        handleIntent(getIntent());
+        if(readingCard) {
+            handleIntent(getIntent());
+        }
     }
 
 
     private void handleIntent(Intent intent) {
-        String action = intent.getAction();
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+        if(readingCard) {
+            String action = intent.getAction();
+            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
 
-            String type = intent.getType();
-            if (MIME_TEXT_PLAIN.equals(type)) {
 
-                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                new NdefReaderTask().execute(tag);
 
-            } else {
-                Log.d(TAG, "Wrong mime type: " + type);
-            }
-        } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+                String type = intent.getType();
+                if (MIME_TEXT_PLAIN.equals(type)) {
 
-            // In case we would still use the Tech Discovered Intent
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            String[] techList = tag.getTechList();
-            String searchedTech = Ndef.class.getName();
+                    Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-            for (String tech : techList) {
-                if (searchedTech.equals(tech)) {
                     new NdefReaderTask().execute(tag);
-                    break;
+
+                } else {
+                    Log.d(TAG, "Wrong mime type: " + type);
+                }
+            } else if (NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
+
+                // In case we would still use the Tech Discovered Intent
+                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                String[] techList = tag.getTechList();
+                String searchedTech = Ndef.class.getName();
+
+                for (String tech : techList) {
+                    if (searchedTech.equals(tech)) {
+                        new NdefReaderTask().execute(tag);
+                        break;
+                    }
                 }
             }
         }
+
+        if(writingCard) {
+            String action = intent.getAction();
+            if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action))
+            {
+                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                NdefMessage ndefMessage = createNdefmessage("Upstart Goblin");
+
+                writeNdefMessage(tag, ndefMessage);
+
+            }
+
+        }
+
     }
 
 
@@ -192,6 +245,7 @@ public class HomeScreenActivity extends AppCompatActivity{
             filters[0].addDataType(MIME_TEXT_PLAIN);
         } catch (IntentFilter.MalformedMimeTypeException e) {
             throw new RuntimeException("Check your mime type.");
+
         }
 
         adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
@@ -203,6 +257,99 @@ public class HomeScreenActivity extends AppCompatActivity{
      */
     public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
         adapter.disableForegroundDispatch(activity);
+    }
+
+    private void formatTag (Tag tag, NdefMessage ndefMessage)
+    {
+        try{
+            NdefFormatable ndefFormatable = NdefFormatable.get(tag);
+            if(ndefFormatable == null )
+            {
+                Toast.makeText(this, "Tag is not formattable", Toast.LENGTH_SHORT).show();;
+                ndefFormatable.connect();
+                ndefFormatable.format(ndefMessage);
+                ndefFormatable.close();
+            }
+
+        }
+        catch (Exception e)
+        {
+            Log.e("Format tag", e.getMessage());
+
+        }
+    }
+
+    private void writeNdefMessage(Tag tag, NdefMessage ndefMessage)
+    {
+        try {
+            if(tag==null)
+            {
+                Toast.makeText(this, "tagObject cannot be null", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Ndef ndef = Ndef.get(tag);
+
+            if(ndef == null)
+            {
+                //format tag with the ndef format and writes the message
+                formatTag(tag, ndefMessage);
+            }
+            else{
+                ndef.connect();
+
+                if(!ndef.isWritable())
+                {
+                    Toast.makeText(this, "Tag is not writable", Toast.LENGTH_SHORT).show();
+                    ndef.close();
+                    return;
+                }
+
+                ndef.writeNdefMessage(ndefMessage);
+                ndef.close();
+
+                Toast.makeText(this, "Tag Written!", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+        catch (Exception e)
+        {
+            Log.e("writeNdefMessage", e.getMessage());
+        }
+    }
+
+    private NdefRecord createTextRecord(String content)
+    {
+        try {
+            byte[] language;
+            language = Locale.getDefault().getLanguage().getBytes("UTF-8");
+
+            final byte[] text = content.getBytes("UTF-8");
+            final int languageSize = language.length;
+            final int textLength = text.length;
+            final ByteArrayOutputStream payload = new ByteArrayOutputStream(1 + languageSize + textLength);
+
+            payload.write((byte) (languageSize & 0x1F));
+            payload.write(language, 0 , languageSize);
+            payload.write(text, 0 , textLength);
+
+            return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload.toByteArray());
+
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            Log.e("createTextRecord", e.getMessage());
+        }
+        return null;
+    }
+
+    private NdefMessage createNdefmessage(String content)
+    {
+        NdefRecord ndefRecord = createTextRecord(content);
+
+        NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{ndefRecord});
+
+        return ndefMessage;
     }
     private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
 
@@ -266,10 +413,13 @@ public class HomeScreenActivity extends AppCompatActivity{
             return new String(payload, languageCodeLength + 1, payload.length - languageCodeLength - 1, textEncoding);
         }
 
+
+
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
                 WelcomeText.setText("Read content: " + result);
+                readingCard = false;
             }
             else
             {
@@ -277,6 +427,10 @@ public class HomeScreenActivity extends AppCompatActivity{
             }
         }
     }
+
+
+
+
 
 }
 
