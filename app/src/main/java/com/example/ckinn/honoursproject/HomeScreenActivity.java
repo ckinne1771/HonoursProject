@@ -1,6 +1,7 @@
 package com.example.ckinn.honoursproject;
 
 import android.app.Activity;
+import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -115,7 +116,8 @@ public class HomeScreenActivity extends AppCompatActivity{
         ExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                finish();
+                System.exit(0);
             }
         });
         theNFCAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -180,6 +182,8 @@ public class HomeScreenActivity extends AppCompatActivity{
                 NdefMessage ndefMessage = createNdefmessage("Upstart Goblin");
 
                 writeNdefMessage(tag, ndefMessage);
+                WelcomeText.setText("Card Data Written");
+                writingCard = false;
 
             }
 
