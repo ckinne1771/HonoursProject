@@ -89,9 +89,13 @@ public class HomeScreenActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if(writingCard==false)
                 {
+                    Intent intent = new Intent(HomeScreenActivity.this, SetupCardActivity.class);
+                    startActivity(intent);
+                    /*
                     writingCard = true;
                     readingCard = false;
                     WelcomeText.setText("Card Writing Activated. Hold device over card to write");
+                    */
                 }
                 else if(writingCard==true)
                 {
@@ -142,10 +146,10 @@ public class HomeScreenActivity extends AppCompatActivity{
 
 
     private void handleIntent(Intent intent) {
+
         if(readingCard) {
             String action = intent.getAction();
             if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-
 
 
                 String type = intent.getType();
@@ -171,15 +175,38 @@ public class HomeScreenActivity extends AppCompatActivity{
                         break;
                     }
                 }
+            } else if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(action)) {
+                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                String[] techList = tag.getTechList();
+                String searchedTech = Ndef.class.getName();
+
+                for (String tech : techList) {
+                    if (searchedTech.equals(tech)) {
+                        new NdefReaderTask().execute(tag);
+                        break;
+                    }
+                }
             }
         }
 
-        if(writingCard) {
+
+
+        else if(writingCard) {
             String action = intent.getAction();
             if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action))
             {
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                NdefMessage ndefMessage = createNdefmessage("Upstart Goblin");
+                NdefMessage ndefMessage = createNdefmessage("Blue Eyes White Dragon");
+
+                writeNdefMessage(tag, ndefMessage);
+                WelcomeText.setText("Card Data Written");
+                writingCard = false;
+
+            }
+            if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(action))
+            {
+                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                NdefMessage ndefMessage = createNdefmessage("Blue Eyes White Dragon");
 
                 writeNdefMessage(tag, ndefMessage);
                 WelcomeText.setText("Card Data Written");
@@ -238,7 +265,7 @@ public class HomeScreenActivity extends AppCompatActivity{
 
         final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
 
-        IntentFilter[] filters = new IntentFilter[1];
+        /*IntentFilter[] filters = new IntentFilter[2];
         String[][] techList = new String[][]{};
 
         // Notice that this is the same filter as in our manifest.
@@ -251,8 +278,11 @@ public class HomeScreenActivity extends AppCompatActivity{
             throw new RuntimeException("Check your mime type.");
 
         }
+        filters[1] = new IntentFilter();
+        filters[1].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);*/
 
-        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
+
+        adapter.enableForegroundDispatch(activity, pendingIntent, null, null);
     }
 
     /**
@@ -422,11 +452,13 @@ public class HomeScreenActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                WelcomeText.setText("Read content: " + result);
                 readingCard = false;
+                WelcomeText.setText("Read content: " + result);
+
             }
             else
             {
+                readingCard = false;
                 WelcomeText.setText("Tag was empty, but still read");
             }
         }
