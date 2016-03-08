@@ -117,9 +117,20 @@ public class CardClass {
         return this.Set;
     }
 
-    public void getSet(String set)
+    public void setSet(String set)
     {
         this.Set = set;
+    }
+
+    @Override
+    public  String toString() {
+        String cardData;
+        cardData = "Name: " + getName() + " Type of Card: " + getType()
+                + " Level: " + getCardLevel() + " Attribute: " + getCardAttribute()
+                + "Type (if monster): " + getCardType() + " Card Text: " + getCardText() +
+                " Attack: " + getAttack() + " Defence: " + getDefence() + " Set: " + getSet();
+        return  cardData;
+    }
     }
 
 
@@ -133,6 +144,6 @@ public class CardClass {
 
 
 
-}
+
 
 

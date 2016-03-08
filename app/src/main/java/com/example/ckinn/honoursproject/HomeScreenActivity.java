@@ -157,7 +157,7 @@ public class HomeScreenActivity extends AppCompatActivity{
 
                     Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
 
-                    new NdefReaderTask().execute(tag);
+                    new NdefReaderTask(this).execute(tag);
 
                 } else {
                     Log.d(TAG, "Wrong mime type: " + type);
@@ -171,7 +171,7 @@ public class HomeScreenActivity extends AppCompatActivity{
 
                 for (String tech : techList) {
                     if (searchedTech.equals(tech)) {
-                        new NdefReaderTask().execute(tag);
+                        new NdefReaderTask(this).execute(tag);
                         break;
                     }
                 }
@@ -182,7 +182,7 @@ public class HomeScreenActivity extends AppCompatActivity{
 
                 for (String tech : techList) {
                     if (searchedTech.equals(tech)) {
-                        new NdefReaderTask().execute(tag);
+                        new NdefReaderTask(this).execute(tag);
                         break;
                     }
                 }
@@ -387,6 +387,10 @@ public class HomeScreenActivity extends AppCompatActivity{
     }
     private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
 
+        private Context mContext;
+        public NdefReaderTask (Context context){
+            mContext = context;
+        }
         @Override
         protected String doInBackground(Tag... params) {
             Tag tag = params[0];
@@ -454,6 +458,16 @@ public class HomeScreenActivity extends AppCompatActivity{
             if (result != null) {
                 readingCard = false;
                 WelcomeText.setText("Read content: " + result);
+                DBHandler dbHandler = new DBHandler(mContext, "CardDatabase1.s3db", null, 2);
+                try {
+                    dbHandler.dbCreate();
+                }
+                catch (IOException e)
+                {
+
+                }
+
+                WelcomeText.setText(dbHandler.findCard(result).toString());
 
             }
             else
