@@ -19,11 +19,12 @@ import java.util.Locale;
  */
 public class DBHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
     private static final String DB_NAME = "CardDatabase1.s3db";
     private static final String DB_PATH = "/data/data/com.example.ckinn.honoursproject/databases/";
 
     private static final String TABLE_CARDS = "Cards";
+    private static final String TABLE_CARDSOWNED = "CardsOwned";
 
     public static final String COLUMN_NAME = "Name";
     public static final String COLUMN_TYPE = "Type";
@@ -55,7 +56,15 @@ public class DBHandler extends SQLiteOpenHelper {
                 COLUMN_CARDATTRIBUTE + " STRING," + COLUMN_CARDTYPE + " STRING," +
                 COLUMN_CARDTEXT + " STRING," + COLUMN_ATTACK + " STRING," +
                 COLUMN_DEFENCE + " STRING," + COLUMN_SET + " STRING" + ")";
+        String CREATE_CARDSOWNED_TABLE = "CREATE TABLE " +
+                TABLE_CARDSOWNED + "("
+                + COLUMN_NAME + " STRING NOT NULL PRIMARY KEY," + COLUMN_TYPE
+                + " STRING," + COLUMN_CARDLEVEL + " STRING," +
+                COLUMN_CARDATTRIBUTE + " STRING," + COLUMN_CARDTYPE + " STRING," +
+                COLUMN_CARDTEXT + " STRING," + COLUMN_ATTACK + " STRING," +
+                COLUMN_DEFENCE + " STRING," + COLUMN_SET + " STRING" + ")";
         db.execSQL(CREATE_CARDS_TABLE);
+        db.execSQL(CREATE_CARDSOWNED_TABLE);
 
     }
 
@@ -89,7 +98,7 @@ public class DBHandler extends SQLiteOpenHelper {
             String dbPath = DB_PATH + DB_NAME;
             db = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
             db.setLocale(Locale.getDefault());
-            db.setVersion(1);
+            db.setVersion(3);
         }
         catch(SQLiteException e)
         {
@@ -148,21 +157,65 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void addCardOwned(CardClass card) {
+
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, card.getName());
+        values.put(COLUMN_TYPE, card.getType());
+        values.put(COLUMN_ATTACK, card.getAttack());
+        values.put(COLUMN_CARDATTRIBUTE, card.getCardAttribute());
+        values.put(COLUMN_CARDLEVEL, card.getCardLevel());
+        values.put(COLUMN_DEFENCE, card.getDefence());
+        values.put(COLUMN_CARDTEXT, card.getCardText());
+        values.put(COLUMN_SET, card.getSet());
+        values.put(COLUMN_CARDTYPE, card.getCardType());
+//COmplete
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.insert(TABLE_CARDSOWNED, null, values);
+        db.close();
+    }
+
     public CardClass findCard (String cardname)
     {
 
         String query = "Select * FROM " + TABLE_CARDS + " WHERE "
                 + COLUMN_NAME + " =  \"" + cardname + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
-       /*onCreate(db);
-        try {
-            copyDBFromAssets();
-        }
-        catch (IOException e)
-        {
 
+        Cursor cursor = db.rawQuery(query, null);
+
+
+        CardClass card = new CardClass();
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst();
+            card.setName(cursor.getString(0));
+            card.setType(cursor.getString(1));
+            card.setCardLevel(cursor.getString(2));
+            card.setCardAttribute(cursor.getString(3));
+            card.setCardType(cursor.getString(4));
+            card.setCardText(cursor.getString(5));
+            card.setAttack(cursor.getString(6));
+            card.setDefence(cursor.getString(7));
+            card.setSet(cursor.getString(8));
+
+            cursor.close();
+        } else {
+            card = null;
         }
-        */
+        db.close();
+        return card;
+
+    }
+
+    public CardClass findCardOwned (String cardname)
+    {
+
+        String query = "Select * FROM " + TABLE_CARDSOWNED + " WHERE "
+                + COLUMN_NAME + " =  \"" + cardname + "\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+
         Cursor cursor = db.rawQuery(query, null);
 
 
@@ -193,6 +246,29 @@ public class DBHandler extends SQLiteOpenHelper {
         boolean result = false;
 
         String query = "Select * FROM " + TABLE_CARDS + " WHERE " + COLUMN_NAME + " =  \"" +
+                cardname + "\"";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        CardClass card = new CardClass();
+
+        if (cursor.moveToFirst()) {
+            card.setName(cursor.getString(0));
+            db.delete(TABLE_CARDS, COLUMN_NAME + " = ?",
+                    new String[] { String.valueOf(card.getName()) });
+            cursor.close();
+            result = true;
+        }
+        db.close();
+        return result;
+    }
+    public boolean deleteCardOwned(String cardname) {
+
+        boolean result = false;
+
+        String query = "Select * FROM " + TABLE_CARDSOWNED + " WHERE " + COLUMN_NAME + " =  \"" +
                 cardname + "\"";
 
         SQLiteDatabase db = this.getWritableDatabase();

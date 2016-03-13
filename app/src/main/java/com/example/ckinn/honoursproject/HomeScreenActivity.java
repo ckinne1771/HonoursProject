@@ -458,7 +458,7 @@ public class HomeScreenActivity extends AppCompatActivity{
             if (result != null) {
                 readingCard = false;
                 WelcomeText.setText("Read content: " + result);
-                DBHandler dbHandler = new DBHandler(mContext, "CardDatabase1.s3db", null, 2);
+                DBHandler dbHandler = new DBHandler(mContext, "CardDatabase1.s3db", null, 3);
                 try {
                     dbHandler.dbCreate();
                 }
@@ -466,8 +466,16 @@ public class HomeScreenActivity extends AppCompatActivity{
                 {
 
                 }
+                CardClass foundItem = dbHandler.findCard(result);
+                if (foundItem.getName() != null)
+                {
+                    dbHandler.addCardOwned(foundItem);
+                    Toast.makeText(mContext, "Card Added to Library", Toast.LENGTH_SHORT).show();
+                    WelcomeText.setText(dbHandler.findCard(result).toString());
+                }
 
-                WelcomeText.setText(dbHandler.findCard(result).toString());
+
+
 
             }
             else
