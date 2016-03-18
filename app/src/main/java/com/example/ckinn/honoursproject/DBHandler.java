@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -287,6 +288,27 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
         return result;
     }
+
+    public String[] getSpinnerContent()
+    {
+        String query = "Select * FROM " + TABLE_CARDSOWNED;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        ArrayList<String> spinnerContent = new ArrayList<String>();
+        if(cursor.moveToFirst()){
+            do{
+                String word = cursor.getString(cursor.getColumnIndexOrThrow("Name"));
+                spinnerContent.add(word);
+            }while(cursor.moveToNext());
+        }
+        cursor.close();
+
+        String[] allSpinner = new String[spinnerContent.size()];
+        allSpinner = spinnerContent.toArray(allSpinner);
+
+        return allSpinner;
+    }
+
 }
 
 

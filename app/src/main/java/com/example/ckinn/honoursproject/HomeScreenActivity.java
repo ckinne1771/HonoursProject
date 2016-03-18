@@ -10,6 +10,7 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,7 +57,7 @@ public class HomeScreenActivity extends AppCompatActivity{
     NfcAdapter theNFCAdapter;
     public static boolean readingCard = false;
     private boolean writingCard = false;
-
+    private ArrayAdapter<String> listAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +109,8 @@ public class HomeScreenActivity extends AppCompatActivity{
         ViewLibraryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                    Intent intent = new Intent(HomeScreenActivity.this, LibraryActivity.class);
+                    startActivity(intent);
             }
         });
         DuelButton.setOnClickListener(new View.OnClickListener() {

@@ -125,10 +125,10 @@ public class CardClass {
     @Override
     public  String toString() {
         String cardData;
-        cardData = "Name: " + getName() + " Type of Card: " + getType()
-                + " Level: " + getCardLevel() + " Attribute: " + getCardAttribute()
-                + "Type (if monster): " + getCardType() + " Card Text: " + getCardText() +
-                " Attack: " + getAttack() + " Defence: " + getDefence() + " Set: " + getSet();
+        cardData = "NAME: " + getName() + "\n\nTYPE OF CARD: " + getType()
+                + "\n\nLEVEL: " + getCardLevel() + "\n\nATTRIBUTE: " + getCardAttribute()
+                + "\n\nTYPE (IF MONSTER): " + getCardType() + "\n\nCARD TEXT: " + getCardText() +
+                "\n\nATTACK: " + getAttack() + "\n\nDEFENCE: " + getDefence() + "\n\nSET: " + getSet();
         return  cardData;
     }
     }

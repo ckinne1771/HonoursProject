@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:id="@+id/Instructions"
+             android:layout_gravity="center_horizontal"
+             android:layout_marginBottom="15dp"
+             android:text="Please select a card from your current library of cards to view more details on them."
+             android:textAlignment="center"
+             android:textSize="10pt"/>
+
+             <Spinner
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:id="@+id/cardspinner"
+              android:layout_gravity="center_horizontal"
+              android:layout_marginBottom="15dp"
+                 android:scrollbarSize="10pt"
+                 />
+
+            <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/cardImage"
+               android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"/>
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textAppearance="?android:attr/textAppearanceMedium"
+             android:text="Medium Text"
+             android:id="@+id/cardInfo"
+             android:layout_gravity="center_horizontal"
+             android:layout_marginBottom="15dp"/>
+     </LinearLayout>
+    </ScrollView>
