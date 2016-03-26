@@ -116,7 +116,8 @@ public class HomeScreenActivity extends AppCompatActivity{
         DuelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(HomeScreenActivity.this, DuelActivity.class);
+                startActivity(intent);
             }
         });
         ExitButton.setOnClickListener(new View.OnClickListener() {
