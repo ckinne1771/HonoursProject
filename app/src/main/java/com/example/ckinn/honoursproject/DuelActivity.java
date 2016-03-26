@@ -131,6 +131,329 @@ public class DuelActivity extends AppCompatActivity{
                 }
             }
         });
+        duelBox2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox2.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox2.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox2.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox3.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox3.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox3.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox4.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox4.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox4.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox5.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox5.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox5.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox6.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox6.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox6.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox7.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox7.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox7.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox8.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox8.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox8.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox9.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox9.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox9.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox9.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox10.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox10.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox10.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox11.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox11.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox11.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox12.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox12.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox12.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox12.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox13.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox13.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox13.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox13.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox14.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox14.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox14.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox14.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox15.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox15.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox15.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox15.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox16.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox16.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox16.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox16.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox17.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox17.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox17.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox17.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox18.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox18.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox18.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox18.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox19.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox19.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox19.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox19.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
+        duelBox20.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (card1Selected)
+                {
+                    duelBox20.setImageResource(R.drawable.darkmagician);
+                }
+                else if(card2Selected)
+                {
+                    duelBox20.setImageResource(R.drawable.blueeyeswhitedragon);
+                }
+                else if (card3Selected)
+                {
+                    duelBox20.setImageResource(R.drawable.harpielady);
+                }
+            }
+        });
 
     }
     }
