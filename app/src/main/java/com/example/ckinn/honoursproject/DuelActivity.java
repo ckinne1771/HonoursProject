@@ -1,9 +1,13 @@
 package com.example.ckinn.honoursproject;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by ckinn on 20/03/2016.
@@ -37,6 +41,10 @@ public class DuelActivity extends AppCompatActivity{
     private boolean card1Selected = false;
     private boolean card2Selected = false;
     private boolean card3Selected = false;
+    int cardImage1Chosen = 0;
+    int cardImage2Chosen = 0;
+    int cardImage3Chosen = 0;
+    ArrayList<Integer> cardResources = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +72,71 @@ public class DuelActivity extends AppCompatActivity{
         duelBox18  = (ImageButton) findViewById(R.id.DuelBox18);
         duelBox19  = (ImageButton) findViewById(R.id.DuelBox19);
         duelBox20  = (ImageButton) findViewById(R.id.DuelBox20);
+        final DBHandler dbHandler = new DBHandler(DuelActivity.this, "CardDatabase1.s3db", null, 3);
+        String[] cardList = dbHandler.getSpinnerContent();
+
+        cardResources.add(R.drawable.blueeyeswhitedragon);
+        cardResources.add(R.drawable.darkmagician);
+        cardResources.add(R.drawable.harpielady);
+
+        Random rand = new Random();
+        int n = rand.nextInt(cardList.length);
+        if (n == 0)
+        {
+            card1.setImageResource(R.drawable.blueeyeswhitedragon);
+            cardImage1Chosen = 0;
+
+        }
+        else if (n == 1)
+        {
+            card1.setImageResource(R.drawable.darkmagician);
+            cardImage1Chosen = 1;
+
+        }
+        else if (n == 2)
+        {
+            card1.setImageResource(R.drawable.harpielady);
+            cardImage1Chosen = 2;
+
+        }
+        n = rand.nextInt(cardList.length);
+        if (n == 0)
+        {
+            card2.setImageResource(R.drawable.blueeyeswhitedragon);
+            cardImage2Chosen  =0;
+
+        }
+        else if (n == 1)
+        {
+            card2.setImageResource(R.drawable.darkmagician);
+            cardImage2Chosen = 1;
+
+        }
+        else if (n == 2)
+        {
+            card2.setImageResource(R.drawable.harpielady);
+            cardImage2Chosen = 2;
+
+        }
+        n = rand.nextInt(cardList.length);
+        if (n == 0)
+        {
+            card3.setImageResource(R.drawable.blueeyeswhitedragon);
+            cardImage3Chosen = 0;
+
+        }
+        else if (n == 1)
+        {
+            card3.setImageResource(R.drawable.darkmagician);
+            cardImage3Chosen =1;
+
+        }
+        else if (n == 2)
+        {
+            card3.setImageResource(R.drawable.harpielady);
+            cardImage3Chosen = 2;
+
+        }
 
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +146,7 @@ public class DuelActivity extends AppCompatActivity{
                     card1Selected = true;
                     card2Selected = false;
                     card3Selected = false;
+
                 }
                 else if (card1Selected)
                 {
@@ -116,18 +190,19 @@ public class DuelActivity extends AppCompatActivity{
 
         duelBox1.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if (card1Selected)
+            public void onClick(View v) {//the first zone on the field
+                if (card1Selected)//if the first card is selected
                 {
-                    duelBox1.setImageResource(R.drawable.darkmagician);
+                    //cardImage1Chosen, cardImage2Chose, and cardImage3Chosen refer to the integer value representing the image of a particular card.
+                    duelBox1.setImageResource(cardResources.get(cardImage1Chosen));//set the image of the zone to the image associated with first card.
                 }
-                else if(card2Selected)
+                else if(card2Selected)//if the second card is selected
                 {
-                    duelBox1.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox1.setImageResource(cardResources.get(cardImage2Chosen));//set the image of the zone to the image associated with second card.
                 }
-                else if (card3Selected)
+                else if (card3Selected)//if the third card is selected
                 {
-                    duelBox1.setImageResource(R.drawable.harpielady);
+                    duelBox1.setImageResource(cardResources.get(cardImage3Chosen));//set the image of the zone to the image associated with third card.
                 }
             }
         });
@@ -136,15 +211,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox2.setImageResource(R.drawable.darkmagician);
+                    duelBox2.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox2.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox2.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox2.setImageResource(R.drawable.harpielady);
+                    duelBox2.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -153,15 +228,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox3.setImageResource(R.drawable.darkmagician);
+                    duelBox3.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox3.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox3.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox3.setImageResource(R.drawable.harpielady);
+                    duelBox3.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -170,15 +245,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox4.setImageResource(R.drawable.darkmagician);
+                    duelBox4.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox4.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox4.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox4.setImageResource(R.drawable.harpielady);
+                    duelBox4.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -187,15 +262,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox5.setImageResource(R.drawable.darkmagician);
+                    duelBox5.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox5.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox5.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox5.setImageResource(R.drawable.harpielady);
+                    duelBox5.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -204,15 +279,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox6.setImageResource(R.drawable.darkmagician);
+                    duelBox6.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox6.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox6.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox6.setImageResource(R.drawable.harpielady);
+                    duelBox6.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -221,15 +296,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox7.setImageResource(R.drawable.darkmagician);
+                    duelBox7.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox7.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox7.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox7.setImageResource(R.drawable.harpielady);
+                    duelBox7.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -238,15 +313,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox8.setImageResource(R.drawable.darkmagician);
+                    duelBox8.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox8.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox8.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox8.setImageResource(R.drawable.harpielady);
+                    duelBox8.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -255,15 +330,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox9.setImageResource(R.drawable.darkmagician);
+                    duelBox9.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox9.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox9.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox9.setImageResource(R.drawable.harpielady);
+                    duelBox9.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -272,15 +347,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox10.setImageResource(R.drawable.darkmagician);
+                    duelBox10.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox10.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox10.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox10.setImageResource(R.drawable.harpielady);
+                    duelBox10.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -289,15 +364,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox11.setImageResource(R.drawable.darkmagician);
+                    duelBox11.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox11.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox11.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox11.setImageResource(R.drawable.harpielady);
+                    duelBox11.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -306,15 +381,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox12.setImageResource(R.drawable.darkmagician);
+                    duelBox12.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox12.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox12.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox12.setImageResource(R.drawable.harpielady);
+                    duelBox12.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -323,15 +398,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox13.setImageResource(R.drawable.darkmagician);
+                    duelBox13.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox13.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox13.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox13.setImageResource(R.drawable.harpielady);
+                    duelBox13.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -340,15 +415,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox14.setImageResource(R.drawable.darkmagician);
+                    duelBox14.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox14.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox14.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox14.setImageResource(R.drawable.harpielady);
+                    duelBox14.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -357,15 +432,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox15.setImageResource(R.drawable.darkmagician);
+                    duelBox15.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox15.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox15.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox15.setImageResource(R.drawable.harpielady);
+                    duelBox15.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -374,15 +449,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox16.setImageResource(R.drawable.darkmagician);
+                    duelBox16.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox16.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox16.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox16.setImageResource(R.drawable.harpielady);
+                    duelBox16.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -391,15 +466,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox17.setImageResource(R.drawable.darkmagician);
+                    duelBox17.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox17.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox17.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox17.setImageResource(R.drawable.harpielady);
+                    duelBox17.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -408,15 +483,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox18.setImageResource(R.drawable.darkmagician);
+                    duelBox18.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox18.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox18.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox18.setImageResource(R.drawable.harpielady);
+                    duelBox18.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -425,15 +500,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox19.setImageResource(R.drawable.darkmagician);
+                    duelBox19.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox19.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox19.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox19.setImageResource(R.drawable.harpielady);
+                    duelBox19.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });
@@ -442,15 +517,15 @@ public class DuelActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if (card1Selected)
                 {
-                    duelBox20.setImageResource(R.drawable.darkmagician);
+                    duelBox20.setImageResource(cardResources.get(cardImage1Chosen));
                 }
                 else if(card2Selected)
                 {
-                    duelBox20.setImageResource(R.drawable.blueeyeswhitedragon);
+                    duelBox20.setImageResource(cardResources.get(cardImage2Chosen));
                 }
                 else if (card3Selected)
                 {
-                    duelBox20.setImageResource(R.drawable.harpielady);
+                    duelBox20.setImageResource(cardResources.get(cardImage3Chosen));
                 }
             }
         });

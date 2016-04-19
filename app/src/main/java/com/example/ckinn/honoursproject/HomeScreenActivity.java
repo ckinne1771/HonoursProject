@@ -72,13 +72,13 @@ public class HomeScreenActivity extends AppCompatActivity{
         ReadCardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(readingCard==false)
+                if(readingCard==false)//if the button is pressed whilst readingCard is set to false
                 {
-                    readingCard = true;
+                    readingCard = true; //This value helps stop accidental tag reading
                     writingCard = false;
                     WelcomeText.setText("Card Reading Activated. Hold device over card to scan");
                 }
-               else if(readingCard==true)
+               else if(readingCard==true)//if the button is pressed whilst readingCard is set to false
                 {
                     readingCard = false;
                     WelcomeText.setText("Card Reading Deactivated.");
@@ -92,11 +92,7 @@ public class HomeScreenActivity extends AppCompatActivity{
                 {
                     Intent intent = new Intent(HomeScreenActivity.this, SetupCardActivity.class);
                     startActivity(intent);
-                    /*
-                    writingCard = true;
-                    readingCard = false;
-                    WelcomeText.setText("Card Writing Activated. Hold device over card to write");
-                    */
+
                 }
                 else if(writingCard==true)
                 {
@@ -148,19 +144,19 @@ public class HomeScreenActivity extends AppCompatActivity{
     }
 
 
-    private void handleIntent(Intent intent) {
+    private void handleIntent(Intent intent) {//this method is used to handle NFC discovery.
 
         if(readingCard) {
             String action = intent.getAction();
-            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {//If an NFC tag is discovered
 
 
                 String type = intent.getType();
                 if (MIME_TEXT_PLAIN.equals(type)) {
 
-                    Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                    Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);//Gets the tag so it can be used in code.
 
-                    new NdefReaderTask(this).execute(tag);
+                    new NdefReaderTask(this).execute(tag);//Calls a class to read the data on the class
 
                 } else {
                     Log.d(TAG, "Wrong mime type: " + type);
@@ -191,68 +187,27 @@ public class HomeScreenActivity extends AppCompatActivity{
                 }
             }
         }
-
-
-
-        else if(writingCard) {
-            String action = intent.getAction();
-            if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action))
-            {
-                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                NdefMessage ndefMessage = createNdefmessage("Blue Eyes White Dragon");
-
-                writeNdefMessage(tag, ndefMessage);
-                WelcomeText.setText("Card Data Written");
-                writingCard = false;
-
-            }
-            if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(action))
-            {
-                Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-                NdefMessage ndefMessage = createNdefmessage("Blue Eyes White Dragon");
-
-                writeNdefMessage(tag, ndefMessage);
-                WelcomeText.setText("Card Data Written");
-                writingCard = false;
-
-            }
-
-        }
-
     }
 
 
 
     @Override
-    protected void onResume() {
+    protected void onResume() { //Whist the application is running
         super.onResume();
-
-        /**
-         * It's important, that the activity is in the foreground (resumed). Otherwise
-         * an IllegalStateException is thrown.
-         */
-        setupForegroundDispatch(this,theNFCAdapter);
+        setupForegroundDispatch(this, theNFCAdapter); // set up the foreground dispatch system.
     }
 
     @Override
     protected void onPause() {
-        /**
-         * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
-         */
-        stopForegroundDispatch(this, theNFCAdapter);
 
-        super.onPause();
+        stopForegroundDispatch(this, theNFCAdapter); //stop the foreground dispatch. This MUST be done before
+        //the application is paused outright to avoid errors.
+
+        super.onPause();//pause application. This can be run when the user minimises the application.
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        /**
-         * This method gets called, when a new Intent gets associated with the current activity instance.
-         * Instead of creating a new activity, onNewIntent will be called. For more information have a look
-         * at the documentation.
-         *
-         * In our case this method gets called, when the user attaches a Tag to the device.
-         */
         handleIntent(intent);
     }
 
@@ -262,30 +217,14 @@ public class HomeScreenActivity extends AppCompatActivity{
      * @param activity The corresponding {@link Activity} requesting the foreground dispatch.
      * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
      */
-    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) { //declaration of the foreground dispatch. Takes in an activity and an NFC adapter.
+        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());//set the intent to the current activity and class.
+        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);//give prioroty to this intent.
 
-        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
-
-        /*IntentFilter[] filters = new IntentFilter[2];
-        String[][] techList = new String[][]{};
-
-        // Notice that this is the same filter as in our manifest.
-        filters[0] = new IntentFilter();
-        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-        try {
-            filters[0].addDataType(MIME_TEXT_PLAIN);
-        } catch (IntentFilter.MalformedMimeTypeException e) {
-            throw new RuntimeException("Check your mime type.");
-
-        }
-        filters[1] = new IntentFilter();
-        filters[1].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);*/
+        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);//get intent of an application which may handle an NFC intent.
 
 
-        adapter.enableForegroundDispatch(activity, pendingIntent, null, null);
+        adapter.enableForegroundDispatch(activity, pendingIntent, null, null);//Starts foreground dispatch and therefore no other activity can handle NFC intents.
     }
 
     /**
@@ -296,98 +235,7 @@ public class HomeScreenActivity extends AppCompatActivity{
         adapter.disableForegroundDispatch(activity);
     }
 
-    private void formatTag (Tag tag, NdefMessage ndefMessage)
-    {
-        try{
-            NdefFormatable ndefFormatable = NdefFormatable.get(tag);
-            if(ndefFormatable == null )
-            {
-                Toast.makeText(this, "Tag is not formattable", Toast.LENGTH_SHORT).show();;
-                ndefFormatable.connect();
-                ndefFormatable.format(ndefMessage);
-                ndefFormatable.close();
-            }
 
-        }
-        catch (Exception e)
-        {
-            Log.e("Format tag", e.getMessage());
-
-        }
-    }
-
-    private void writeNdefMessage(Tag tag, NdefMessage ndefMessage)
-    {
-        try {
-            if(tag==null)
-            {
-                Toast.makeText(this, "tagObject cannot be null", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            Ndef ndef = Ndef.get(tag);
-
-            if(ndef == null)
-            {
-                //format tag with the ndef format and writes the message
-                formatTag(tag, ndefMessage);
-            }
-            else{
-                ndef.connect();
-
-                if(!ndef.isWritable())
-                {
-                    Toast.makeText(this, "Tag is not writable", Toast.LENGTH_SHORT).show();
-                    ndef.close();
-                    return;
-                }
-
-                ndef.writeNdefMessage(ndefMessage);
-                ndef.close();
-
-                Toast.makeText(this, "Tag Written!", Toast.LENGTH_SHORT).show();
-
-            }
-        }
-        catch (Exception e)
-        {
-            Log.e("writeNdefMessage", e.getMessage());
-        }
-    }
-
-    private NdefRecord createTextRecord(String content)
-    {
-        try {
-            byte[] language;
-            language = Locale.getDefault().getLanguage().getBytes("UTF-8");
-
-            final byte[] text = content.getBytes("UTF-8");
-            final int languageSize = language.length;
-            final int textLength = text.length;
-            final ByteArrayOutputStream payload = new ByteArrayOutputStream(1 + languageSize + textLength);
-
-            payload.write((byte) (languageSize & 0x1F));
-            payload.write(language, 0 , languageSize);
-            payload.write(text, 0 , textLength);
-
-            return new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload.toByteArray());
-
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            Log.e("createTextRecord", e.getMessage());
-        }
-        return null;
-    }
-
-    private NdefMessage createNdefmessage(String content)
-    {
-        NdefRecord ndefRecord = createTextRecord(content);
-
-        NdefMessage ndefMessage = new NdefMessage(new NdefRecord[]{ndefRecord});
-
-        return ndefMessage;
-    }
     private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
 
         private Context mContext;
@@ -429,15 +277,6 @@ public class HomeScreenActivity extends AppCompatActivity{
         }
 
         private String readText(NdefRecord record) throws UnsupportedEncodingException {
-        /*
-         * See NFC forum specification for "Text Record Type Definition" at 3.2.1
-         *
-         * http://www.nfc-forum.org/specs/
-         *
-         * bit_7 defines encoding
-         * bit_6 reserved for future use, must be 0
-         * bit_5..0 length of IANA language code
-         */
 
             byte[] payload = record.getPayload();
 
@@ -458,33 +297,35 @@ public class HomeScreenActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String result) {
-            if (result != null) {
-                readingCard = false;
-                WelcomeText.setText("Read content: " + result);
-                DBHandler dbHandler = new DBHandler(mContext, "CardDatabase1.s3db", null, 3);
-                try {
-                    dbHandler.dbCreate();
+            if (result != null) {//if the tag is not null
+                if(result.equals("Dark Magician") || result.equals("Blue Eyes White Dragon") || result.equals("Harpie Lady")) {//if the data is valid
+                    readingCard = false;
+                    //The following sets up the database in order to search it in a query
+                    DBHandler dbHandler = new DBHandler(mContext, "CardDatabase1.s3db", null, 3);
+                    try {
+                        dbHandler.dbCreate();
+                    } catch (IOException e) {
+
+                    }
+                    //Seaches the table containing all card data for an entry with a card name matching the data read from a tag.
+                    CardClass foundItem = dbHandler.findCard(result);
+                    if (foundItem.getName() != null) {  //if the database table containing all card data contains an entry with the card name matching the read data.
+                        dbHandler.addCardOwned(foundItem);//Add the entry found to the database table containing the cards owned by the user
+                        Toast.makeText(mContext, "Card Added to Library", Toast.LENGTH_SHORT).show();//Make a message pop up to let the user know a tag was written.
+                        WelcomeText.setText("Card " + result + " Added to library. Please select an option.");//change the text view to inform the user of whats happened and what they can do.
+                    }
                 }
-                catch (IOException e)
+                else //if the data read is not recognised in the database table.
                 {
-
+                    readingCard = false;
+                    WelcomeText.setText("Invalid Card Name. Please rewrite card and try again.");
                 }
-                CardClass foundItem = dbHandler.findCard(result);
-                if (foundItem.getName() != null)
-                {
-                    dbHandler.addCardOwned(foundItem);
-                    Toast.makeText(mContext, "Card Added to Library", Toast.LENGTH_SHORT).show();
-                    WelcomeText.setText(dbHandler.findCard(result).toString());
-                }
-
-
-
 
             }
-            else
+            else // if the tag read is null
             {
                 readingCard = false;
-                WelcomeText.setText("Tag was empty, but still read");
+                WelcomeText.setText("The Read tag is empty. Please write data to it.");
             }
         }
     }

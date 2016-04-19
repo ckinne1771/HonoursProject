@@ -51,14 +51,14 @@ public class SetupCardActivity extends AppCompatActivity {
 
         WriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                if(!writeCard)
+            public void onClick(View v) {//logic for the "Write to Tag" button
+                if(!writeCard)//if writeCard is set to false when the button is pressed
                 {
-                    writeCard = true;
+                    writeCard = true;//enables tag writing
                 }
-                else if(writeCard)
+                else if(writeCard)//if writecard is set to true when the button is pressed
                 {
-                    writeCard =false;
+                    writeCard =false;//disables tag writing
                 }
 
             }
@@ -78,15 +78,16 @@ public class SetupCardActivity extends AppCompatActivity {
 
     private void handleIntent(Intent intent)
     {
-       if(writeCard) {
-        String action = intent.getAction();
-        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action))
+       if(writeCard) { //if write card is true when the smartphone is held over a tag.
+        String action = intent.getAction();//gets the intent for the detection of NFC tags.
+        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action))//if  an NDEF tag is discovered.
         {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            NdefMessage ndefMessage = createNdefmessage(cardEntry.getText().toString());
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);//get the tag
+            NdefMessage ndefMessage = createNdefmessage(cardEntry.getText().toString()); //set the message to be written to the tag as the data
+            //entered in the editable text view.
 
-            writeNdefMessage(tag, ndefMessage);
-            writeCard = false;
+            writeNdefMessage(tag, ndefMessage);//write to the tag.
+            writeCard = false;//turn off card writing.
 
         }
         if(NfcAdapter.ACTION_TAG_DISCOVERED.equals(action))
@@ -105,33 +106,19 @@ public class SetupCardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        /**
-         * It's important, that the activity is in the foreground (resumed). Otherwise
-         * an IllegalStateException is thrown.
-         */
         setupForegroundDispatch(this,nfcAdapter);
     }
 
     @Override
     protected void onPause() {
-        /**
-         * Call this before onPause, otherwise an IllegalArgumentException is thrown as well.
-         */
-        stopForegroundDispatch(this, nfcAdapter);
 
+        stopForegroundDispatch(this, nfcAdapter);
         super.onPause();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        /**
-         * This method gets called, when a new Intent gets associated with the current activity instance.
-         * Instead of creating a new activity, onNewIntent will be called. For more information have a look
-         * at the documentation.
-         *
-         * In our case this method gets called, when the user attaches a Tag to the device.
-         */
+
         handleIntent(intent);
     }
 
@@ -147,30 +134,10 @@ public class SetupCardActivity extends AppCompatActivity {
 
         final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
 
-        /*IntentFilter[] filters = new IntentFilter[2];
-        String[][] techList = new String[][]{};
-
-        // Notice that this is the same filter as in our manifest.
-        filters[0] = new IntentFilter();
-        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-        try {
-            filters[0].addDataType(MIME_TEXT_PLAIN);
-        } catch (IntentFilter.MalformedMimeTypeException e) {
-            throw new RuntimeException("Check your mime type.");
-
-        }
-        filters[1] = new IntentFilter();
-        filters[1].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);*/
-
-
         adapter.enableForegroundDispatch(activity, pendingIntent, null, null);
     }
 
-    /**
-     * @param activity The corresponding {@link BaseActivity} requesting to stop the foreground dispatch.
-     * @param adapter The {@link NfcAdapter} used for the foreground dispatch.
-     */
+
     public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
         adapter.disableForegroundDispatch(activity);
     }
@@ -198,37 +165,37 @@ public class SetupCardActivity extends AppCompatActivity {
     private void writeNdefMessage(Tag tag, NdefMessage ndefMessage)
     {
         try {
-            if(tag==null)
+            if(tag==null)// if the tag is empty
             {
                 Toast.makeText(this, "tagObject cannot be null", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            Ndef ndef = Ndef.get(tag);
+            Ndef ndef = Ndef.get(tag); //gets the tag detected.
 
             if(ndef == null)
             {
-                //format tag with the ndef format and writes the message
+                //format tag with the ndef format if it has not already been formatted and writes the message
                 formatTag(tag, ndefMessage);
             }
             else{
-                ndef.connect();
+                ndef.connect();//Connect to the tag.
 
-                if(!ndef.isWritable())
+                if(!ndef.isWritable())//if the tag is not writable
                 {
-                    Toast.makeText(this, "Tag is not writable", Toast.LENGTH_SHORT).show();
-                    ndef.close();
+                    Toast.makeText(this, "Tag is not writable", Toast.LENGTH_SHORT).show();//Display message to user
+                    ndef.close();//disconnect from tag
                     return;
                 }
 
-                ndef.writeNdefMessage(ndefMessage);
-                ndef.close();
+                ndef.writeNdefMessage(ndefMessage);//Write data onto the tag
+                ndef.close();//Disconnect from tag
 
-                Toast.makeText(this, "Tag Written!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Tag Written!", Toast.LENGTH_SHORT).show();// Display message to user.
 
             }
         }
-        catch (Exception e)
+        catch (Exception e) //Exception handling.
         {
             Log.e("writeNdefMessage", e.getMessage());
         }

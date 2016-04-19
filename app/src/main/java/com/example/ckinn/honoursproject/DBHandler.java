@@ -177,21 +177,21 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public CardClass findCard (String cardname)
+    public CardClass findCard (String cardname)//this method is called when an NFC tag is scanned, with "cardname" being the data held in the tag.
     {
-
+        //The SQL querey which  searches the table for card names which match the data read.
         String query = "Select * FROM " + TABLE_CARDS + " WHERE "
                 + COLUMN_NAME + " =  \"" + cardname + "\"";
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();//Access the SQLite Database.
 
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery(query, null);//executes the query.
 
 
-        CardClass card = new CardClass();
+        CardClass card = new CardClass();//an instance of the card class is added so it can be put into the "CardsOwned" table
 
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) { //Entered if a mathc is found.
             cursor.moveToFirst();
-            card.setName(cursor.getString(0));
+            card.setName(cursor.getString(0));//The following "sets" set the attributes of the instance of the card class to the mathed entry's attributes.
             card.setType(cursor.getString(1));
             card.setCardLevel(cursor.getString(2));
             card.setCardAttribute(cursor.getString(3));
