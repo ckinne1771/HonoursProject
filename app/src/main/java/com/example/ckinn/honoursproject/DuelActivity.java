@@ -13,7 +13,9 @@ import java.util.Random;
  * Created by ckinn on 20/03/2016.
  */
 public class DuelActivity extends AppCompatActivity{
+//The variables and Ui elements needed for this activity.
 
+    //the fololwing are the sets of imagebuttons that are needed for duel activity.
     ImageButton card1;
     ImageButton card2;
     ImageButton card3;
@@ -38,6 +40,8 @@ public class DuelActivity extends AppCompatActivity{
     ImageButton duelBox19;
     ImageButton duelBox20;
 
+    //these variables are used to aid in the randomisation of the opening hand and the placement of the image on an
+    //open zone.
     private boolean card1Selected = false;
     private boolean card2Selected = false;
     private boolean card3Selected = false;
@@ -49,6 +53,7 @@ public class DuelActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.duellayout);
+        //define the UI elements
         card1 = (ImageButton) findViewById(R.id.card1);
         card2 = (ImageButton) findViewById(R.id.card2);
         card3 = (ImageButton) findViewById(R.id.card3);
@@ -72,72 +77,78 @@ public class DuelActivity extends AppCompatActivity{
         duelBox18  = (ImageButton) findViewById(R.id.DuelBox18);
         duelBox19  = (ImageButton) findViewById(R.id.DuelBox19);
         duelBox20  = (ImageButton) findViewById(R.id.DuelBox20);
+        //get the list of availible cards.
         final DBHandler dbHandler = new DBHandler(DuelActivity.this, "CardDatabase1.s3db", null, 3);
         String[] cardList = dbHandler.getSpinnerContent();
 
+        //add the intergers representing certain images to an array.
         cardResources.add(R.drawable.blueeyeswhitedragon);
         cardResources.add(R.drawable.darkmagician);
         cardResources.add(R.drawable.harpielady);
 
-        Random rand = new Random();
+        //the folowing code generates the random hand. A random number will be generated for each card,
+        //the result of which determines the card in the hand in a certain position.
+
+        Random rand = new Random();//generate a random number.
         int n = rand.nextInt(cardList.length);
-        if (n == 0)
+        if (n == 0)//if the generated number is 0.
         {
-            card1.setImageResource(R.drawable.blueeyeswhitedragon);
-            cardImage1Chosen = 0;
+            card1.setImageResource(R.drawable.blueeyeswhitedragon);//set the first card to "blue eyes white dragon".
+            cardImage1Chosen = 0;//Define that this card is "blue eyes white dragon.
 
         }
-        else if (n == 1)
+        else if (n == 1)//if the generated number is 1.
         {
-            card1.setImageResource(R.drawable.darkmagician);
-            cardImage1Chosen = 1;
+            card1.setImageResource(R.drawable.darkmagician); //set the first card to "Dark Magician".
+            cardImage1Chosen = 1; //Define that this card is "Dark Magician".
 
         }
-        else if (n == 2)
+        else if (n == 2)//if the generated number is 2.
         {
-            card1.setImageResource(R.drawable.harpielady);
-            cardImage1Chosen = 2;
+            card1.setImageResource(R.drawable.harpielady); //set the first card to "Harpie Lady".
+            cardImage1Chosen = 2; //Define that this card is "Harpie Lady".
 
         }
-        n = rand.nextInt(cardList.length);
-        if (n == 0)
+        n = rand.nextInt(cardList.length);//generate a new number.
+        if (n == 0)//if the generated number is 0
         {
-            card2.setImageResource(R.drawable.blueeyeswhitedragon);
-            cardImage2Chosen  =0;
+            card2.setImageResource(R.drawable.blueeyeswhitedragon); //set the second card to "blue eyes white dragon".
+            cardImage2Chosen  =0; //define that this card is "blue eyes white dragon".
 
         }
-        else if (n == 1)
+        else if (n == 1)//if the generated number is 1.
         {
-            card2.setImageResource(R.drawable.darkmagician);
-            cardImage2Chosen = 1;
+            card2.setImageResource(R.drawable.darkmagician);//set the second card to "Dark Magician".
+            cardImage2Chosen = 1;//define that this card is "Dark Magician".
 
         }
-        else if (n == 2)
+        else if (n == 2)//if the generated number is 2.
         {
-            card2.setImageResource(R.drawable.harpielady);
-            cardImage2Chosen = 2;
+            card2.setImageResource(R.drawable.harpielady); //set the second card to "Harpie Lady".
+            cardImage2Chosen = 2; //define that this card is "harpie Lady".
 
         }
-        n = rand.nextInt(cardList.length);
-        if (n == 0)
+        n = rand.nextInt(cardList.length);//generate a new number.
+        if (n == 0)//if the genreated number is 0.
         {
-            card3.setImageResource(R.drawable.blueeyeswhitedragon);
-            cardImage3Chosen = 0;
+            card3.setImageResource(R.drawable.blueeyeswhitedragon);//set the third card to "blue eyes white dragon".
+            cardImage3Chosen = 0;//define that this card is "blue eyes white dragon".
 
         }
-        else if (n == 1)
+        else if (n == 1)//if the generated number is 1.
         {
-            card3.setImageResource(R.drawable.darkmagician);
-            cardImage3Chosen =1;
+            card3.setImageResource(R.drawable.darkmagician); //set the third card to "dark magician"
+            cardImage3Chosen =1;//define that this card is "dark magician".
 
         }
-        else if (n == 2)
+        else if (n == 2)//if the generated number is 2.
         {
-            card3.setImageResource(R.drawable.harpielady);
-            cardImage3Chosen = 2;
+            card3.setImageResource(R.drawable.harpielady);//set the third card to "Harpie Lady".
+            cardImage3Chosen = 2;//define that this card is "harpie Lady".
 
         }
-
+//the following are con click listeners that detect when a card has been selected and chance boolean values when pressed
+        //to help indicate what card is activated.
         card1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,6 +199,8 @@ public class DuelActivity extends AppCompatActivity{
             }
         });
 
+        //The following are on click listeners for the zempty zones on the field. When a card is selected, pressing
+        //on an open zone will cause the selected card's image to be placed on the zone.
         duelBox1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//the first zone on the field
@@ -206,6 +219,7 @@ public class DuelActivity extends AppCompatActivity{
                 }
             }
         });
+        //the rest of the duel zones follow the smae logic as the first.
         duelBox2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

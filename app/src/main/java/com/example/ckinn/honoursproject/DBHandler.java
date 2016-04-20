@@ -20,10 +20,14 @@ import java.util.Locale;
  */
 public class DBHandler extends SQLiteOpenHelper {
 
+    //The variables used for the class.
+
+    //These variables are used to define the path and name of the database, as well as its version
     private static final int DATABASE_VERSION = 3;
     private static final String DB_NAME = "CardDatabase1.s3db";
     private static final String DB_PATH = "/data/data/com.example.ckinn.honoursproject/databases/";
 
+    //These variables are mostly used to aid in the creation of database tables.
     private static final String TABLE_CARDS = "Cards";
     private static final String TABLE_CARDSOWNED = "CardsOwned";
 
@@ -37,8 +41,11 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_DEFENCE = "Defence";
     public static final String COLUMN_SET = "SetName";
 
+    //this variable is used when the context of the application should be defined.
     private final Context appContext;
 
+    //The constructor for this class. This takes in a context, the name of the database, the cursor
+    //factory and the version of the database.
     public DBHandler (Context context, String name, SQLiteDatabase.CursorFactory factory,
                       int version)
     {
@@ -48,8 +55,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
+    //this method creates the two tables which are needed for this application.
+    //These tables are the "cards" table and the "cardsOwned" table. The "cards" table holds data
+    //on all of the available cards that the application can scan, while the "cardsOwned" table holds data
+    //on the cards scanned by the user.
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //strings a first created which form the SQL quesry that creates the tables.
         String CREATE_CARDS_TABLE = "CREATE TABLE " +
                 TABLE_CARDS + "("
                 + COLUMN_NAME + " STRING NOT NULL PRIMARY KEY," + COLUMN_TYPE
@@ -64,11 +76,13 @@ public class DBHandler extends SQLiteOpenHelper {
                 COLUMN_CARDATTRIBUTE + " STRING," + COLUMN_CARDTYPE + " STRING," +
                 COLUMN_CARDTEXT + " STRING," + COLUMN_ATTACK + " STRING," +
                 COLUMN_DEFENCE + " STRING," + COLUMN_SET + " STRING" + ")";
+        //This is were the SQL queries are executed.
         db.execSQL(CREATE_CARDS_TABLE);
         db.execSQL(CREATE_CARDSOWNED_TABLE);
 
     }
 
+    //This method is called when the version of hte database changes. It will recreate the "cards" table.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
@@ -76,6 +90,7 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //This method is called to create the database by copying it from assets if it does not currently exist.
     public void dbCreate() throws IOException
     {
         boolean dbExist = dbCheck();
@@ -92,32 +107,40 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    //this method attempts to open the database to see if it exists. If no database is found, an exception is coaught and degigging information
+    //is provided.
     private Boolean dbCheck()
     {
         SQLiteDatabase db = null;
+        //the application attempts to open the database in the specified path.
         try{
             String dbPath = DB_PATH + DB_NAME;
             db = SQLiteDatabase.openDatabase(dbPath, null, SQLiteDatabase.OPEN_READWRITE);
             db.setLocale(Locale.getDefault());
             db.setVersion(3);
         }
+        //if no database is found.
         catch(SQLiteException e)
         {
             Log.e("SQLHelper", "Database not Found!");
         }
+        //if the database is found.
         if(db != null)
         {
             db.close();
         }
 
+        //returns true if the database is found, false if the database has not been found.
         return  db != null ? true : false;
     }
 
+    //This method is used to copy the data iside the external database into the created database table
     private void copyDBFromAssets () throws IOException{
         InputStream dbInput = null;
         OutputStream dbOutput = null;
         String dbFileName = DB_PATH + DB_NAME;
 
+        //attempts to copy database
         try {
             dbInput = appContext.getAssets().open(DB_NAME);
             dbOutput = new FileOutputStream(dbFileName);
@@ -133,34 +156,20 @@ public class DBHandler extends SQLiteOpenHelper {
             dbOutput.close();
             dbInput.close();
         }
+        //if the database cannot be copied.
         catch (IOException e)
         {
             throw new Error ("Problems copying DB!");
         }
     }
 
-    public void addCard(CardClass card) {
-
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_NAME, card.getName());
-        values.put(COLUMN_TYPE, card.getType());
-        values.put(COLUMN_ATTACK, card.getAttack());
-        values.put(COLUMN_CARDATTRIBUTE, card.getCardAttribute());
-        values.put(COLUMN_CARDLEVEL, card.getCardLevel());
-        values.put(COLUMN_DEFENCE, card.getDefence());
-        values.put(COLUMN_CARDTEXT, card.getCardText());
-        values.put(COLUMN_SET, card.getSet());
-        values.put(COLUMN_CARDTYPE, card.getCardType());
-//COmplete
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.insert(TABLE_CARDS, null, values);
-        db.close();
-    }
-
+    //this method is used to add a card to the "cardsOwned" table. Used when the NFC reading functionality reads a tag
+    //containing correct data.
     public void addCardOwned(CardClass card) {
 
+        //defines a new set of values for the database table..
         ContentValues values = new ContentValues();
+        //The folowing adds values to each of the columns in the database table.
         values.put(COLUMN_NAME, card.getName());
         values.put(COLUMN_TYPE, card.getType());
         values.put(COLUMN_ATTACK, card.getAttack());
@@ -170,14 +179,18 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(COLUMN_CARDTEXT, card.getCardText());
         values.put(COLUMN_SET, card.getSet());
         values.put(COLUMN_CARDTYPE, card.getCardType());
-//COmplete
+
+        //get the database.
         SQLiteDatabase db = this.getWritableDatabase();
 
+        //Inset the set of values as a new entry into the "cardsOwned" table.
         db.insert(TABLE_CARDSOWNED, null, values);
+        //close the database.
         db.close();
     }
 
-    public CardClass findCard (String cardname)//this method is called when an NFC tag is scanned, with "cardname" being the data held in the tag.
+    //this method is called when an NFC tag is scanned, with "cardname" being the data held in the tag.
+    public CardClass findCard (String cardname)
     {
         //The SQL querey which  searches the table for card names which match the data read.
         String query = "Select * FROM " + TABLE_CARDS + " WHERE "
@@ -187,9 +200,9 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);//executes the query.
 
 
-        CardClass card = new CardClass();//an instance of the card class is added so it can be put into the "CardsOwned" table
+        CardClass card = new CardClass();//an instance of the card class is created so it can be put into the "CardsOwned" table
 
-        if (cursor.moveToFirst()) { //Entered if a mathc is found.
+        if (cursor.moveToFirst()) { //Entered if a match is found.
             cursor.moveToFirst();
             card.setName(cursor.getString(0));//The following "sets" set the attributes of the instance of the card class to the mathed entry's attributes.
             card.setType(cursor.getString(1));
@@ -210,21 +223,24 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    //This method is used by the library class in order to find data stored in the "cardsOwned" table
+    //This allows the data on the cards scanned by the user to be viewed.
     public CardClass findCardOwned (String cardname)
     {
 
+        //The SQL querey which  searches the table for card names which match the data supplied.
         String query = "Select * FROM " + TABLE_CARDSOWNED + " WHERE "
                 + COLUMN_NAME + " =  \"" + cardname + "\"";
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase(); //Access the SQLite Database
 
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery(query, null); //executes the query.
 
 
-        CardClass card = new CardClass();
+        CardClass card = new CardClass();//an instance of the card class is created in order to hold viewable data.
 
-        if (cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) { //Entered if a match is found.
             cursor.moveToFirst();
-            card.setName(cursor.getString(0));
+            card.setName(cursor.getString(0));//The following "sets" set the attributes of the instance of the card class to the mathed entry's attributes.
             card.setType(cursor.getString(1));
             card.setCardLevel(cursor.getString(2));
             card.setCardAttribute(cursor.getString(3));
@@ -242,67 +258,24 @@ public class DBHandler extends SQLiteOpenHelper {
         return card;
 
     }
-    public boolean deleteCard(String cardname) {
 
-        boolean result = false;
 
-        String query = "Select * FROM " + TABLE_CARDS + " WHERE " + COLUMN_NAME + " =  \"" +
-                cardname + "\"";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        CardClass card = new CardClass();
-
-        if (cursor.moveToFirst()) {
-            card.setName(cursor.getString(0));
-            db.delete(TABLE_CARDS, COLUMN_NAME + " = ?",
-                    new String[] { String.valueOf(card.getName()) });
-            cursor.close();
-            result = true;
-        }
-        db.close();
-        return result;
-    }
-    public boolean deleteCardOwned(String cardname) {
-
-        boolean result = false;
-
-        String query = "Select * FROM " + TABLE_CARDSOWNED + " WHERE " + COLUMN_NAME + " =  \"" +
-                cardname + "\"";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        CardClass card = new CardClass();
-
-        if (cursor.moveToFirst()) {
-            card.setName(cursor.getString(0));
-            db.delete(TABLE_CARDS, COLUMN_NAME + " = ?",
-                    new String[] { String.valueOf(card.getName()) });
-            cursor.close();
-            result = true;
-        }
-        db.close();
-        return result;
-    }
-
+    //this method is used by the library class to pupulate the spinner with possible options.
     public String[] getSpinnerContent()
     {
-        String query = "Select * FROM " + TABLE_CARDSOWNED;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
-        ArrayList<String> spinnerContent = new ArrayList<String>();
+        String query = "Select * FROM " + TABLE_CARDSOWNED; // the SQL query to search the "cardsOwned" table for card names.
+        SQLiteDatabase db = this.getWritableDatabase();//gets the database
+        Cursor cursor = db.rawQuery(query, null);//executes the query.
+        ArrayList<String> spinnerContent = new ArrayList<String>(); //defines an array list of strings that will hold the data found in the query.
         if(cursor.moveToFirst()){
             do{
-                String word = cursor.getString(cursor.getColumnIndexOrThrow("Name"));
-                spinnerContent.add(word);
+                String word = cursor.getString(cursor.getColumnIndexOrThrow("Name"));//sets the value of a string to the entry found in the name column
+                spinnerContent.add(word); //adds the string to the array list.
             }while(cursor.moveToNext());
         }
         cursor.close();
 
+        //Adds the arraylsit to an array of strings and returns this array.
         String[] allSpinner = new String[spinnerContent.size()];
         allSpinner = spinnerContent.toArray(allSpinner);
 

@@ -4,8 +4,9 @@ package com.example.ckinn.honoursproject;
  * Created by ckinn on 22/02/2016.
  */
 public class CardClass {
+    // the variables used in this class
     private String Name;
-   private String Type;
+    private String Type;
     private String CardLevel;
     private String CardAttribute;
     private String CardType;
@@ -14,11 +15,13 @@ public class CardClass {
     private String Defence;
     private String Set;
 
+    //the basic constructor for this class
     public CardClass()
     {
 
     }
 
+    //the contructor for this class which passes in parameters which are then used to assign values to the variables of this class.
     public CardClass(String name, String type, String cardLevel, String cardAttribute, String cardType, String cardText, String attack, String defence, String set)
     {
         this.Name = name;
@@ -32,6 +35,8 @@ public class CardClass {
         this.Set = set;
     }
 
+    //The getters and setters for the variables of this class. These methods are used throught the application when
+    // it is necessary to either get a value of a variable in this class or change it.
     public String getName()
     {
         return this.Name;
@@ -122,6 +127,8 @@ public class CardClass {
         this.Set = set;
     }
 
+    //Returns a string output of all of the values assigned to variables in this class. Used in the "Library" class to display
+    //all of the data on a specific card.
     @Override
     public  String toString() {
         String cardData;
